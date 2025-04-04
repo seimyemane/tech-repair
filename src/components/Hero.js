@@ -29,7 +29,7 @@ const Hero = () => {
           </span>
         </span>
       </div>
-      <span className=" lg:w-[80%] md:w-[80%]  w-full  flex justify-around bg-slate-300 bg-opacity-25 p-4 lg:p-6 md:p-6  ">
+      <span className=" lg:w-[80%] md:w-[80%]  w-full  flex justify-around bg-slate-300 bg-opacity-25 p-4 lg:p-6 md:p-6  max-h-full items-center">
         <img
           src={AppleLogo}
           alt=""
