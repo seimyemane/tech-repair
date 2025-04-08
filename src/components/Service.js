@@ -7,7 +7,7 @@ import { IoGameController } from "react-icons/io5";
 
 const Service = () => {
   return (
-    <section className=" flex justify-center items-center lg:h-[100vh] md:h-[100vh] h-full  w-full overflow-scroll">
+    <section className=" flex justify-center items-center lg:h-[100vh] md:h-[100vh] h-full  w-full ">
       <div className="  lg:w-[80%] md:w-[80%] h-full w-full bg-no-repeat bg-cover  bg-[url('/src/images/services.jpg')] h-full flex justify-evenly flex-col items-center text-2xl">
         <span className="lg:text-6xl md:text-6xl text-5xl text-neutral-100 flex justify-center items-center m-2">
           {" "}

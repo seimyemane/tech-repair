@@ -8,7 +8,8 @@ import OneplusLogo from "../assets/oneplus.svg";
 import LgLogo from "../assets/lg.svg";
 import HuaweiLogo from "../assets/huawei.svg";
 import SonyLogo from "../assets/sony.svg";
-const Hero = () => {
+
+const Hero = ({ onGetQouteClick }) => {
   return (
     <section className=" flex justify-center items-center h-[100vh]  w-full flex-col">
       <div className=" lg:w-[80%] md:w-[80%] h-full w-full  flex items-center justify-center bg-no-repeat bg-cover  bg-[url('/src/images/hero3.jpg')] ">
@@ -22,7 +23,10 @@ const Hero = () => {
           </h4>
           <span className="mt-20">
             {" "}
-            <button className="bg-green-400 p-4 rounded-md text-3xl ">
+            <button
+              className="bg-green-400 p-4 rounded-md text-3xl "
+              onClick={onGetQouteClick}
+            >
               {" "}
               Get a Free Quote
             </button>
