@@ -79,12 +79,9 @@ export default function Contact() {
     };
 
     try {
-      console.log("Public Key:", process.env.REACT_APP_fuck);
-
       const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID;
       const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
       const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
-      console.log(publicKey, serviceId);
       await emailjs.send(serviceId, templateId, templateParams, publicKey);
       setStatus({
         type: "success",
