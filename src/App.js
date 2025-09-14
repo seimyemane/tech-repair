@@ -4,6 +4,8 @@ import Service from "./components/Service";
 import Testimonials from "./components/Testimonials";
 import About from "./components/About";
 import React, { useRef } from "react";
+import FAQ from "./components/FAQ";
+
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
@@ -11,6 +13,7 @@ function App() {
   const aboutRef = useRef(null);
   const servicesRef = useRef(null);
   const contactRef = useRef(null);
+  const FAQRef = useRef(null);
   return (
     <div className="App">
       <div>
@@ -39,12 +42,17 @@ function App() {
       <div>
         <Testimonials />
       </div>
+
       <div ref={aboutRef}>
         <About />
+      </div>
+      <div ref={FAQRef}>
+        <FAQ />
       </div>
       <div ref={contactRef}>
         <Contact />
       </div>
+
       <div>
         <Footer />
       </div>

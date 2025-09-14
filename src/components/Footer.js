@@ -1,18 +1,83 @@
 import React from "react";
+import { Mail, Wrench, Truck, Phone, Globe } from "lucide-react";
 
-const Footer = () => {
-  const dateNow = new Date();
-  const year = dateNow.getFullYear();
+export default function Footer() {
+  const year = new Date().getFullYear();
+
+  const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "Services", href: "/services" },
+    { name: "About", href: "/about" },
+    { name: "FAQ", href: "/faq" },
+    { name: "Contact", href: "/contact" },
+  ];
+
   return (
-    <section className=" flex justify-center items-center lg:h-[20vh] md:h-[20vh] h-fit  w-full ">
-      <div className="  lg:w-[80%] md:w-[80%]  w-full h-full flex justify-evenly flex-col  text-xl bg-slate-900 text-neutral-300 p-2">
-        <p> Need a fix? Book a repair now! </p>
-        <p>Free Pickups and Delivery Mon–Sun: 5PM–7PM</p>
-        <p>Email: thedevicelab8@gmail.com</p>
-        <p>{`© ${year} The Device Lab.  All rights reserved`}</p>
-      </div>
-    </section>
-  );
-};
+    <footer className="bg-slate-900 text-neutral-300">
+      <div className="mx-auto max-w-6xl px-4 py-10">
+        {/* Top */}
+        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
+          {/* Branding + Info */}
+          <div className="space-y-3 text-center sm:text-left">
+            <h2 className="text-xl font-bold text-white">The DeviceLab</h2>
+            <p className="text-sm text-neutral-400">
+              Fast repairs & IT solutions in Edmonton
+            </p>
+            <div className="mt-4 space-y-2 text-sm">
+              <p className="flex items-center justify-center gap-2 sm:justify-start">
+                <Wrench className="h-4 w-4 text-cyan-400" /> Need a fix?{" "}
+                <span className="font-semibold">Book a repair now!</span>
+              </p>
+              <p className="flex items-center justify-center gap-2 sm:justify-start">
+                <Truck className="h-4 w-4 text-cyan-400" /> Free Pickups &
+                Delivery Mon–Sun: 5PM–7PM
+              </p>
+              <p className="flex items-center justify-center gap-2 sm:justify-start">
+                <Mail className="h-4 w-4 text-cyan-400" />{" "}
+                <a
+                  href="mailto:thedevicelab8@gmail.com"
+                  className="hover:underline"
+                >
+                  thedevicelab8@gmail.com
+                </a>
+              </p>
+              <p className="flex items-center justify-center gap-2 sm:justify-start">
+                <Phone className="h-4 w-4 text-cyan-400" />{" "}
+                <a href="tel:+18257857009" className="hover:underline">
+                  825‑785‑7009
+                </a>
+              </p>
+            </div>
+          </div>
 
-export default Footer;
+          {/* Navigation */}
+          <div className="text-center sm:text-right">
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-neutral-400">
+              Explore
+            </h3>
+            <ul className="space-y-2 text-sm">
+              {navLinks.map((link) => (
+                <li key={link.name}>
+                  <a
+                    href={link.href}
+                    className="transition hover:text-cyan-400"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom */}
+        <div className="mt-10 flex flex-col items-center justify-between border-t border-slate-700 pt-6 text-xs text-neutral-500 sm:flex-row">
+          <p>© {year} The DeviceLab. All rights reserved.</p>
+          <p className="mt-2 sm:mt-0 flex items-center gap-1">
+            <Globe className="h-3 w-3" /> Edmonton, AB
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+}
