@@ -287,8 +287,8 @@ export default function Contact() {
             <div className="mt-6 space-y-3 text-sm">
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                <a href="tel:+18257857009" className="hover:underline">
-                  Call / Text 825‑785‑7009
+                <a href="https://wa.me/17802469743" className="hover:underline">
+                  Call / Text
                 </a>
               </div>
               <div className="flex items-center gap-2">

@@ -45,11 +45,11 @@ export default function About({
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a
-                href={`tel:${phone}`}
+                href="https://wa.me/17802469743"
                 className="inline-flex items-center gap-2 rounded-2xl bg-indigo-600 px-5 py-3 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                aria-label={`Call or text ${displayPhone}`}
+                aria-label={`Call or text`}
               >
-                <PhoneCall className="h-4 w-4" /> Call / Text {displayPhone}
+                <PhoneCall className="h-4 w-4" /> Call / Text
               </a>
               <a
                 href={`mailto:${email}`}
@@ -223,10 +223,10 @@ export default function About({
           </div>
           <div className="flex flex-wrap gap-3 md:justify-end">
             <a
-              href={`tel:${phone}`}
+              href="https://wa.me/17802469743"
               className="inline-flex items-center gap-2 rounded-2xl bg-indigo-600 px-5 py-3 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600"
             >
-              <PhoneCall className="h-4 w-4" /> Call / Text {displayPhone}
+              <PhoneCall className="h-4 w-4" /> Whatsapp
             </a>
             <a
               href={`mailto:${email}`}
