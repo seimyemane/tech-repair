@@ -43,8 +43,8 @@ export default function Footer() {
               </p>
               <p className="flex items-center justify-center gap-2 sm:justify-start">
                 <Phone className="h-4 w-4 text-cyan-400" />{" "}
-                <a href="tel:+18257857009" className="hover:underline">
-                  825‑785‑7009
+                <a href="https://wa.me/17802469743" className="hover:underline">
+                  Reach us on WhatsApp
                 </a>
               </p>
             </div>
