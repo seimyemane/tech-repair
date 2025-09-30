@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 // Assets
-import HeroPng from "../images/hero.jpg"; // fallback / default background
+import HeroPng from "../images/hero3.jpg"; // fallback / default background
 import AppleLogo from "../assets/apple.svg";
 import GoogleLogo from "../assets/google.svg";
 import SamsungLogo from "../assets/samsung.svg";
@@ -11,15 +11,6 @@ import OneplusLogo from "../assets/oneplus.svg";
 import LgLogo from "../assets/lg.svg";
 import HuaweiLogo from "../assets/huawei.svg";
 import SonyLogo from "../assets/sony.svg";
-
-/**
- * Hero Section — polished styling
- * - Responsive, accessible, and brand-consistent
- * - Uses an absolutely-positioned <img> for the background for better control
- * - Gradient + overlay to maintain text contrast
- * - Framer Motion for subtle, tasteful entrance animations
- * - Reusable brand strip with logos
- */
 
 const LOGOS = [
   { src: AppleLogo, alt: "Apple" },
@@ -45,24 +36,45 @@ const itemVariants = {
 };
 
 export default function Hero({
-  onGetQouteClick, // NOTE: corrected spelling from onGetQouteClick
-  headline = "Device Repair & IT Solutions in Edmonton",
-  sublineA = "From fast phone & console repairs to professional web development",
-  sublineB = "and IT support — The DeviceLab is your all‑in‑one tech partner.",
-  backgroundSrc, // optional custom background
+  // Backwards-compat: accept both spellings + a modern prop
+  onGetQouteClick,
+  onGetQuoteClick,
+  onPrimaryClick, // preferred
+  onSecondaryClick, // preferred
+  headline = "DeviceLab — Tech Solutions for Supply, Repairs & IT",
+  sublineA = "Wholesale phone parts • iPhone & Samsung repairs • Websites & IT support",
+  sublineB = "Serving Alberta businesses with faster delivery and one-stop service.",
+  backgroundSrc,
+  primaryCtaLabel = "Get a Free Quote",
+  secondaryCtaLabel = "Explore Services",
+  secondaryCtaHref = "#services",
+  serviceLinks = [
+    { label: "Parts Supply", href: "#parts" },
+    { label: "Phone Repairs", href: "#repairs" },
+    { label: "Business Websites", href: "#web" },
+    { label: "IT Support", href: "#it" },
+    { label: "Repairly", href: "#repairly" },
+  ],
 }) {
   const bg = backgroundSrc || HeroPng;
 
+  // unify old/new handler names
+  const handlePrimary =
+    onPrimaryClick || onGetQuoteClick || onGetQouteClick || (() => {});
+  const handleSecondary =
+    onSecondaryClick ||
+    (secondaryCtaHref ? undefined : () => {}) || // if href provided, render as link
+    (() => {});
+
   return (
     <section className="relative flex w-full min-h-[100vh] items-center justify-center overflow-hidden">
-      {/* Background Image */}
+      {/* Background */}
       <div className="pointer-events-none absolute inset-0">
         <img
           src={bg}
           alt="Technician repairing devices and providing IT services"
           className="h-full w-full object-cover"
         />
-        {/* Gradient + subtle overlay for contrast */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/40 to-slate-900/80" />
       </div>
 
@@ -93,24 +105,64 @@ export default function Hero({
           {sublineB}
         </motion.p>
 
-        <motion.div variants={itemVariants} className="mt-8">
+        {/* CTAs */}
+        <motion.div
+          variants={itemVariants}
+          className="mt-8 flex flex-wrap items-center justify-center gap-3"
+        >
           <button
-            onClick={onGetQouteClick}
+            onClick={handlePrimary}
             className="group inline-flex items-center gap-2 rounded-2xl border border-cyan-300/60 bg-slate-900/70 px-6 py-3 text-lg font-medium backdrop-blur transition hover:scale-[1.03] hover:border-cyan-300 hover:bg-slate-900/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
           >
-            Get a Free Quote
+            {primaryCtaLabel}
             <ArrowRight
               className="transition group-hover:translate-x-0.5"
               size={20}
               aria-hidden="true"
             />
           </button>
+
+          {secondaryCtaHref ? (
+            <a
+              href={secondaryCtaHref}
+              className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-6 py-3 text-lg font-medium backdrop-blur transition hover:scale-[1.03] hover:border-white/30 hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+            >
+              {secondaryCtaLabel}
+            </a>
+          ) : (
+            <button
+              onClick={handleSecondary}
+              className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-6 py-3 text-lg font-medium backdrop-blur transition hover:scale-[1.03] hover:border-white/30 hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+            >
+              {secondaryCtaLabel}
+            </button>
+          )}
         </motion.div>
+
+        {/* Service Quick-Links (highlights what you do) */}
+        <motion.nav
+          variants={itemVariants}
+          aria-label="DeviceLab services"
+          className="mt-8 max-w-4xl"
+        >
+          <ul className="flex flex-wrap items-center justify-center gap-2">
+            {serviceLinks.map(({ label, href }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  className="inline-block rounded-full border border-white/15 bg-white/10 px-3.5 py-2 text-sm backdrop-blur hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </motion.nav>
 
         {/* Brand Strip */}
         <motion.div
           variants={itemVariants}
-          className="mt-16 w-full"
+          className="mt-12 w-full"
           aria-label="Brands we service"
         >
           <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur">
@@ -129,7 +181,7 @@ export default function Hero({
         </motion.div>
       </motion.div>
 
-      {/* Bottom subtle vignette */}
+      {/* Bottom vignette */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/40 to-transparent" />
     </section>
   );

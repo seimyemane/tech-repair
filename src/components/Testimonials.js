@@ -1,196 +1,126 @@
 import React from "react";
 import { motion } from "framer-motion";
-// Testimonials assets
+
+// Assets (use imports instead of /src/... paths)
 import Face1 from "../images/face1.jpg";
 import Face2 from "../images/face2.jpg";
 import Face3 from "../images/face3.jpg";
 import Face4 from "../images/face4.jpg";
+import TestimonialBg from "../images/testimonialBG.jpg";
 
-const TESTIMONIALS = [
+/* ---------- Defaults (override via props) ---------- */
+const DEFAULT_TESTIMONIALS = [
   {
-    text: "This service was amazing and super fast!",
+    quote: "This service was amazing and super fast!",
+    name: "Sarah L.",
+    title: "Edmonton",
     img: Face1,
-    rating: 4,
-    name: "Sarah L., Edmonton",
+    stars: 4,
   },
   {
-    text: "Great customer service. They explained everything clearly and were honest about what needed to be fixed. 10/10 experience.",
+    quote:
+      "Great customer service. They explained everything clearly and were honest about what needed to be fixed. 10/10 experience.",
+    name: "James M.",
+    title: "Local Business Owner",
     img: Face2,
-    rating: 5,
-    name: "James M., Local Business Owner",
+    stars: 5,
   },
   {
-    text: "They even stayed a bit late just to get my screen fixed before my trip. That level of service is rare these days.",
-    img: Face3,
-    rating: 5,
+    quote:
+      "They even stayed a bit late just to get my screen fixed before my trip. That level of service is rare these days.",
     name: "Bianca C.",
+    title: "",
+    img: Face3,
+    stars: 5,
   },
   {
-    text: "Saved me from buying a new phone! Battery replacement was quick, affordable, and done right.",
-    img: Face4,
-    rating: 4,
+    quote:
+      "Saved me from buying a new phone! Battery replacement was quick, affordable, and done right.",
     name: "Kevin T.",
+    title: "",
+    img: Face4,
+    stars: 4,
   },
 ];
 
+/* ---------- Motion ---------- */
 const containerVariants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.15 } },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, when: "beforeChildren" },
+  },
 };
-
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
 };
 
-export default function Testimonial() {
+/* ---------- UI ---------- */
+const StarRow = ({ count = 5 }) => (
+  <div
+    className="flex items-center gap-1"
+    aria-label={`${count} out of 5 stars`}
+  >
+    {Array.from({ length: 5 }).map((_, i) => (
+      <span key={i} className={i < count ? "opacity-100" : "opacity-30"}>
+        ★
+      </span>
+    ))}
+  </div>
+);
+
+export default function Testimonials({
+  id = "testimonials",
+  heading = "Our Customers",
+  testimonials = DEFAULT_TESTIMONIALS,
+  backgroundSrc = TestimonialBg,
+}) {
+  const bg = backgroundSrc || TestimonialBg;
+
   return (
-    <section className="relative flex flex-col items-center justify-center w-full min-h-[100vh] overflow-hidden bg-slate-950">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <img
-          src="/src/images/testimonialBG.jpg"
-          alt="Happy customers background"
-          className="h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70" />
-      </div>
-
-      <motion.div
-        initial="hidden"
-        animate="show"
-        variants={containerVariants}
-        className="relative z-10 w-full max-w-6xl px-4 py-12 text-neutral-100"
-      >
-        <motion.h2
-          variants={itemVariants}
-          className="mb-12 text-center text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
-        >
-          Our Customers
-        </motion.h2>
-
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
-          {TESTIMONIALS.map(({ text, img, rating, name }) => (
-            <motion.div
-              key={name}
-              variants={itemVariants}
-              className="flex flex-col justify-between rounded-2xl border border-white/10 bg-white/5 p-6 text-neutral-200 shadow-md backdrop-blur hover:scale-[1.02] transition"
-            >
-              <p className="mb-4 italic">“{text}”</p>
-              <div className="mt-auto flex items-center gap-4">
-                <img
-                  src={img}
-                  alt={`Customer ${name}`}
-                  className="h-16 w-16 rounded-full object-cover"
-                />
-                <div className="flex flex-col">
-                  <span className="text-yellow-400">{"★".repeat(rating)}</span>
-                  <p className="text-sm text-neutral-300">— {name}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
-    </section>
-  );
-}
-
-// =============================
-// Testimonials (polished)
-// =============================
-export function Testimonials() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.08 } },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 14 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
-  };
-  const TESTIMONIALS = [
-    {
-      quote: "This service was amazing and super fast!",
-      name: "Sarah L.",
-      title: "Edmonton",
-      img: Face1,
-      stars: 4,
-    },
-    {
-      quote:
-        "Great customer service. They explained everything clearly and were honest about what needed to be fixed. 10/10 experience.",
-      name: "James M.",
-      title: "Local Business Owner",
-      img: Face2,
-      stars: 5,
-    },
-    {
-      quote:
-        "They even stayed a bit late just to get my screen fixed before my trip. That level of service is rare these days.",
-      name: "Bianca C.",
-      title: "",
-      img: Face3,
-      stars: 5,
-    },
-    {
-      quote:
-        "Saved me from buying a new phone! Battery replacement was quick, affordable, and done right.",
-      name: "Kevin T.",
-      title: "",
-      img: Face4,
-      stars: 4,
-    },
-  ];
-
-  const StarRow = ({ count }) => (
-    <div
-      className="flex items-center gap-1"
-      aria-label={`${count} out of 5 stars`}
+    <section
+      id={id}
+      className="relative flex min-h-[100vh] w-full items-center justify-center overflow-hidden bg-slate-950"
+      aria-labelledby={`${id}-title`}
     >
-      {Array.from({ length: 5 }).map((_, i) => (
-        <span key={i} className={i < count ? "opacity-100" : "opacity-30"}>
-          ★
-        </span>
-      ))}
-    </div>
-  );
-
-  return (
-    <section className="relative flex min-h-[100vh] w-full items-center justify-center overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
         <img
-          src="/src/images/testimonialBG.jpg"
-          alt="Abstract tech pattern background"
+          src={bg}
+          alt="Abstract background with subtle tech texture"
           className="h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/50 to-slate-900/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
       </div>
 
+      {/* Content */}
       <motion.div
         initial="hidden"
         animate="show"
         variants={containerVariants}
-        className="relative z-10 mx-auto w-full max-w-6xl px-4 text-neutral-100"
+        className="relative z-10 mx-auto w-full max-w-6xl px-4 py-12 text-neutral-100"
       >
         <motion.h2
+          id={`${id}-title`}
           variants={itemVariants}
-          className="mb-8 text-center text-4xl font-bold tracking-tight sm:mb-12 sm:text-5xl"
+          className="mb-10 text-center text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
         >
-          Our Customers
+          {heading}
         </motion.h2>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
-          {TESTIMONIALS.map((t, idx) => (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {testimonials.map((t, idx) => (
             <motion.figure
-              key={idx}
+              key={`${t.name}-${idx}`}
               variants={itemVariants}
-              className="rounded-2xl border border-white/10 bg-white/5 p-6 text-neutral-100 backdrop-blur"
+              className="rounded-2xl border border-white/10 bg-white/5 p-6 text-neutral-100 shadow-md backdrop-blur transition hover:scale-[1.02]"
             >
-              <blockquote className="text-pretty text-lg italic">
+              <blockquote className="text-pretty text-lg italic leading-relaxed">
                 “{t.quote}”
               </blockquote>
-              <figcaption className="mt-4 flex items-center gap-3">
+
+              <figcaption className="mt-5 flex items-center gap-4">
                 <img
                   src={t.img}
                   alt={`${t.name} portrait`}
@@ -201,7 +131,9 @@ export function Testimonials() {
                 />
                 <div className="flex flex-col">
                   <span className="font-semibold">{t.name}</span>
-                  <span className="text-sm text-neutral-300">{t.title}</span>
+                  {t.title ? (
+                    <span className="text-sm text-neutral-300">{t.title}</span>
+                  ) : null}
                 </div>
                 <div className="ml-auto text-yellow-400">
                   <StarRow count={t.stars} />

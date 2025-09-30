@@ -1,52 +1,65 @@
-import React, { useState, useMemo } from "react";
-import emailjs from "emailjs-com";
+import React, { useMemo, useState } from "react";
+import emailjs from "@emailjs/browser"; // <- modern SDK
 import { motion } from "framer-motion";
 import { Mail, Phone, User, MessageSquare, Send } from "lucide-react";
 import ContactBG from "../images/contact.jpg"; // fallback / default background
 
-/**
- * Contact — polished, accessible form
- * - Matches visual style (background image + gradient overlay)
- * - Inline validation + disabled state
- * - ARIA live region for success/error
- * - Keeps your EmailJS service/template/public key (consider env vars)
- */
-
 const container = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.08 } },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, when: "beforeChildren" },
+  },
 };
 const item = {
   hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45 } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
 };
 
-export default function Contact() {
+export default function Contact({
+  id = "contact",
+  heading = "Contact Us",
+  phoneDisplay = "+17802469743",
+  phoneE164 = "+17802469743",
+  email = "thedevicelab8@gmail.com",
+  whatsapp = "https://wa.me/17802469743",
+  // allow overriding EmailJS config via props (else use env)
+  emailjsServiceId = process.env.REACT_APP_EMAILJS_SERVICE_ID,
+  emailjsTemplateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+  emailjsPublicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY,
+}) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     number: "",
     message: "",
+    company: "",
+    _hp: "", // honeypot
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState({ type: null, msg: "" }); // {type: 'success'|'error'|null, msg: string}
+  const [status, setStatus] = useState({ type: null, msg: "" });
 
   const isValidEmail = (v) => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(v.trim());
   const isValidPhone = (v) =>
-    v.trim() === "" || /^(\+?\d[\d\s-]{6,})$/.test(v.trim());
+    v.trim() === "" || /^\+?\d[\d\s().-]{6,}$/.test(v.trim());
 
   const errors = useMemo(() => {
     const e = {};
     if (!formData.name.trim()) e.name = "Please enter your name.";
     if (!formData.email.trim()) e.email = "Please enter your email.";
-    else if (!isValidEmail(formData.email))
-      e.email = "Enter a valid email (e.g., name@example.com).";
+    else if (!isValidEmail(formData.email)) e.email = "Enter a valid email.";
     if (!formData.message.trim())
       e.message = "Tell us briefly how we can help.";
     if (!isValidPhone(formData.number))
       e.number = "Enter a valid phone (digits only).";
     return e;
   }, [formData]);
+
+  // very basic 30s rate limit per tab
+  const tooSoon = () => {
+    const last = Number(sessionStorage.getItem("dl_last_contact_ts") || 0);
+    return Date.now() - last < 30_000;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,55 +70,109 @@ export default function Contact() {
     e.preventDefault();
     setStatus({ type: null, msg: "" });
 
-    // final client-side validation
+    if (formData._hp) return; // bot caught
+
     if (Object.keys(errors).length) {
       setStatus({ type: "error", msg: "Please fix the highlighted fields." });
+      return;
+    }
+    if (tooSoon()) {
+      setStatus({
+        type: "error",
+        msg: "Please wait a few seconds before sending again.",
+      });
+      return;
+    }
+    if (!emailjsServiceId || !emailjsTemplateId || !emailjsPublicKey) {
+      setStatus({
+        type: "error",
+        msg: "Email service is not configured. Please try again later.",
+      });
+      console.error("Missing EmailJS env/config.");
       return;
     }
 
     setIsSubmitting(true);
 
     const now = new Date();
-    const hh = String(now.getHours()).padStart(2, "0");
-    const mm = String(now.getMinutes()).padStart(2, "0");
+    const time = now.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
     const templateParams = {
       title: "Customer Inquiry",
       name: formData.name,
-      time: `${hh}:${mm}`,
-      message:
-        formData.message +
-        (formData.number ? ` | Phone: ${formData.number}` : ""),
       email: formData.email,
+      phone: formData.number,
+      message: formData.message,
+      time,
+      // add any other template variables you defined on EmailJS
     };
 
     try {
-      const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID;
-      const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
-      const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
-      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      await emailjs.send(emailjsServiceId, emailjsTemplateId, templateParams, {
+        publicKey: emailjsPublicKey,
+      });
+      sessionStorage.setItem("dl_last_contact_ts", String(Date.now()));
       setStatus({
         type: "success",
         msg: "Your message has been sent! We'll get back to you shortly.",
       });
-      setFormData({ name: "", email: "", message: "", number: "" });
+      setFormData({
+        name: "",
+        email: "",
+        number: "",
+        message: "",
+        company: "",
+        _hp: "",
+      });
     } catch (err) {
+      console.error("EmailJS error:", err);
       setStatus({
         type: "error",
         msg: "Something went wrong. Please try again later.",
       });
-      console.error("EmailJS error:", err);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // JSON-LD for ContactPage / Organization
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    mainEntity: {
+      "@type": "Organization",
+      name: "The DeviceLab",
+      email: email,
+      telephone: phoneE164,
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          telephone: phoneE164,
+          email: email,
+          areaServed: "CA-AB",
+          availableLanguage: ["en"],
+        },
+      ],
+    },
+  };
+
   return (
-    <section className="relative flex min-h-[100vh] w-full items-center justify-center overflow-hidden">
+    <section
+      id={id}
+      className="relative flex min-h-[100vh] w-full items-center justify-center overflow-hidden"
+    >
+      {/* SEO JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Background */}
-      <div
-        className="absolute inset-0"
-        style={{ backgroundImage: `url(${ContactBG})` }}
-      >
+      <div className="absolute inset-0">
         <img
           src={ContactBG}
           alt="Abstract tech contact background"
@@ -124,7 +191,7 @@ export default function Contact() {
           variants={item}
           className="mb-6 text-center text-4xl font-bold sm:text-5xl"
         >
-          Contact Us
+          {heading}
         </motion.h1>
 
         <div className="mx-auto grid gap-8 md:grid-cols-2">
@@ -135,6 +202,18 @@ export default function Contact() {
             noValidate
             className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur"
           >
+            {/* Honeypot (hidden) */}
+            <input
+              type="text"
+              name="_hp"
+              value={formData._hp}
+              onChange={handleChange}
+              tabIndex={-1}
+              autoComplete="off"
+              className="hidden"
+              aria-hidden="true"
+            />
+
             <div className="grid gap-4">
               <label className="flex flex-col gap-2">
                 <span className="text-sm">Name</span>
@@ -205,7 +284,7 @@ export default function Contact() {
                     value={formData.number}
                     onChange={handleChange}
                     className="w-full bg-transparent outline-none placeholder:text-neutral-400"
-                    placeholder="+1 (555) 123-4567"
+                    placeholder="+1 (825) 785-7009"
                     aria-invalid={!!errors.number}
                     aria-describedby={errors.number ? "phone-err" : undefined}
                   />
@@ -254,7 +333,7 @@ export default function Contact() {
                     isSubmitting ? "opacity-60 cursor-not-allowed" : ""
                   }`}
                 >
-                  <Send className="h-4 w-4" />{" "}
+                  <Send className="h-4 w-4" />
                   {isSubmitting ? "Submitting…" : "Send Message"}
                 </button>
                 <span
@@ -287,17 +366,20 @@ export default function Contact() {
             <div className="mt-6 space-y-3 text-sm">
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                <a href="https://wa.me/17802469743" className="hover:underline">
-                  Call / Text
+                <a href={`tel:${phoneE164}`} className="hover:underline">
+                  Call / Text: {phoneDisplay}
                 </a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <a
-                  href="mailto:seimyemane8@gmail.com"
-                  className="hover:underline"
-                >
-                  thedevicelab8@gmail.com
+                <a href={`mailto:${email}`} className="hover:underline">
+                  {email}
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                <a href={whatsapp} className="hover:underline">
+                  WhatsApp
                 </a>
               </div>
             </div>
