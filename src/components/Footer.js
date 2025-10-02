@@ -28,10 +28,10 @@ export default function Footer() {
                 <Wrench className="h-4 w-4 text-cyan-400" /> Need a fix?{" "}
                 <span className="font-semibold">Book a repair now!</span>
               </p>
-              <p className="flex items-center justify-center gap-2 sm:justify-start">
+              {/* <p className="flex items-center justify-center gap-2 sm:justify-start">
                 <Truck className="h-4 w-4 text-cyan-400" /> Free Pickups &
                 Delivery Mon–Sun: 5PM–7PM
-              </p>
+              </p> */}
               <p className="flex items-center justify-center gap-2 sm:justify-start">
                 <Mail className="h-4 w-4 text-cyan-400" />{" "}
                 <a
