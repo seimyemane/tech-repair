@@ -1,5 +1,6 @@
 import React from "react";
 import { Mail, Wrench, Truck, Phone, Globe } from "lucide-react";
+import terms from "../assets/DeviceLab_Terms_and_Conditions.pdf";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -76,6 +77,14 @@ export default function Footer() {
           <p className="mt-2 sm:mt-0 flex items-center gap-1">
             <Globe className="h-3 w-3" /> Edmonton, AB
           </p>
+          <a
+            href={terms}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline"
+          >
+            Terms & Conditions
+          </a>
         </div>
       </div>
     </footer>
