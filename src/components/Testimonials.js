@@ -11,38 +11,54 @@ import TestimonialBg from "../images/testimonialBG.jpg";
 /* ---------- Defaults (override via props) ---------- */
 const DEFAULT_TESTIMONIALS = [
   {
-    quote: "This service was amazing and super fast!",
+    quote:
+      "My phone screen was fixed in under 30 minutes and it looks brand new. They also helped me back up my data and clean up my storage — excellent service!",
     name: "Sarah L.",
-    title: "Edmonton",
+    title: "Student — Edmonton",
     img: Face1,
-    stars: 4,
+    stars: 5,
   },
   {
     quote:
-      "Great customer service. They explained everything clearly and were honest about what needed to be fixed. 10/10 experience.",
+      "They built our business website and connected it with our online store. Everything from product uploads to payments works perfectly. Orders come straight to my phone.",
     name: "James M.",
-    title: "Local Business Owner",
+    title: "Owner, TechZone Mobile Repairs",
     img: Face2,
     stars: 5,
   },
   {
     quote:
-      "They even stayed a bit late just to get my screen fixed before my trip. That level of service is rare these days.",
+      "We needed an online store that looked professional but didn’t break the bank. Their e-commerce setup and hosting are fast and reliable — sales are up 40%!",
     name: "Bianca C.",
-    title: "",
+    title: "Founder, Luxe Accessories",
     img: Face3,
     stars: 5,
   },
   {
     quote:
-      "Saved me from buying a new phone! Battery replacement was quick, affordable, and done right.",
+      "I manage multiple phone repair shops. They created a single website with booking, maps, and live chat for all our locations. It boosted walk-ins immediately.",
     name: "Kevin T.",
-    title: "",
+    title: "Regional Manager, FixPro Group",
     img: Face4,
     stars: 4,
   },
+  {
+    quote:
+      "They designed our website and set up a repair request form that integrates directly with our CRM. It saves me hours every week.",
+    name: "Ava R.",
+    title: "Owner, SmartCell Repairs",
+    img: Face2,
+    stars: 5,
+  },
+  {
+    quote:
+      "From web design to SEO and online ads, they helped me grow my repair business. I now get consistent bookings through my site every day.",
+    name: "Omar H.",
+    title: "Freelance Technician — Alberta",
+    img: Face1,
+    stars: 5,
+  },
 ];
-
 /* ---------- Motion ---------- */
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -72,7 +88,7 @@ const StarRow = ({ count = 5 }) => (
 
 export default function Testimonials({
   id = "testimonials",
-  heading = "Our Customers",
+  heading = "What Clients Say About Our IT Services",
   testimonials = DEFAULT_TESTIMONIALS,
   backgroundSrc = TestimonialBg,
 }) {
@@ -121,14 +137,6 @@ export default function Testimonials({
               </blockquote>
 
               <figcaption className="mt-5 flex items-center gap-4">
-                <img
-                  src={t.img}
-                  alt={`${t.name} portrait`}
-                  className="h-12 w-12 rounded-full object-cover"
-                  height={48}
-                  width={48}
-                  loading="lazy"
-                />
                 <div className="flex flex-col">
                   <span className="font-semibold">{t.name}</span>
                   {t.title ? (

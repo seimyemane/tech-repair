@@ -121,22 +121,6 @@ export default function Hero({
               aria-hidden="true"
             />
           </button>
-
-          {secondaryCtaHref ? (
-            <a
-              href={secondaryCtaHref}
-              className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-6 py-3 text-lg font-medium backdrop-blur transition hover:scale-[1.03] hover:border-white/30 hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-            >
-              {secondaryCtaLabel}
-            </a>
-          ) : (
-            <button
-              onClick={handleSecondary}
-              className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-6 py-3 text-lg font-medium backdrop-blur transition hover:scale-[1.03] hover:border-white/30 hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-            >
-              {secondaryCtaLabel}
-            </button>
-          )}
         </motion.div>
 
         {/* Service Quick-Links (highlights what you do) */}

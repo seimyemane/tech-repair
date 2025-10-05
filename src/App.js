@@ -8,6 +8,7 @@ import FAQ from "./components/FAQ";
 
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import SampleSites from "./components/SampleSites";
 
 function App() {
   const aboutRef = useRef(null);
@@ -38,6 +39,9 @@ function App() {
       </div>
       <div ref={servicesRef}>
         <Service />
+      </div>
+      <div>
+        <SampleSites />
       </div>
       <div>
         <Testimonials />
