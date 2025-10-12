@@ -9,12 +9,16 @@ import FAQ from "./components/FAQ";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import SampleSites from "./components/SampleSites";
+import ShopLocator from "./components/ShopLocator";
+import Chatbot from "./components/Chatbot";
 
 function App() {
   const aboutRef = useRef(null);
   const servicesRef = useRef(null);
   const contactRef = useRef(null);
   const FAQRef = useRef(null);
+  const shopLocatorRef = useRef(null);
+  const chatbotRef = useRef(null);
   return (
     <div className="App">
       <div>
@@ -28,6 +32,12 @@ function App() {
           onContactClick={() =>
             contactRef.current.scrollIntoView({ behavior: "smooth" })
           }
+          onShopLocatorClick={() =>
+            shopLocatorRef.current.scrollIntoView({ behavior: "smooth" })
+          }
+          onChatBotClick={() =>
+            chatbotRef.current.scrollIntoView({ behavior: "smooth" })
+          }
         />
       </div>
       <div>
@@ -37,9 +47,13 @@ function App() {
           }
         />
       </div>
+
       <div ref={servicesRef}>
         <Service />
       </div>
+      {/* <div ref={shopLocatorRef}>
+        <ShopLocator />
+      </div> */}
       <div>
         <SampleSites />
       </div>
@@ -56,7 +70,9 @@ function App() {
       <div ref={contactRef}>
         <Contact />
       </div>
-
+      {/* <div ref={chatbotRef}>
+        <Chatbot />
+      </div> */}
       <div>
         <Footer />
       </div>

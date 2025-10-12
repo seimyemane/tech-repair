@@ -6,7 +6,6 @@ import { PiPlugChargingFill } from "react-icons/pi";
 import {
   FaBatteryHalf,
   FaCamera,
-  FaGlobe,
   FaWifi,
   FaDatabase,
   FaCloud,
@@ -15,78 +14,110 @@ import {
   FaTools,
   FaBolt,
   FaMobileAlt,
+  FaShoppingBag,
+  FaGlobe,
 } from "react-icons/fa";
 import { SlScreenSmartphone } from "react-icons/sl";
 import { IoIosWater } from "react-icons/io";
 import { IoGameController } from "react-icons/io5";
 import { MdComputer } from "react-icons/md";
 
-// Background asset (adjust the path to where your image actually lives)
-import ServicesBg from "../images/services.jpg";
+/**
+ * DeviceLab Services — Minimal & Clear
+ * Aligned to DeviceLab's company structure:
+ *  - Website Subscriptions (sites + hosting + maintenance)
+ *  - Phone & Device Repairs
+ *  - Business IT & Networking
+ *  - Accessories & Add‑ons (retail)
+ *  - Parts Supply (wholesale)
+ */
 
 /** ---------- Default data (editable via props) ---------- */
-const REPAIR_SERVICES = [
-  { icon: PiPlugChargingFill, label: "Charger Replacement" },
-  { icon: FaBatteryHalf, label: "Battery Replacement" },
+const WEBSITE_SUBSCRIPTION = [
+  { icon: FaGlobe, label: "Website Subscription ($99/mo)" },
+  { icon: FaCloud, label: "Hosting & Maintenance" },
+  { icon: FaDatabase, label: "Backups & Updates" },
+  { icon: MdComputer, label: "Booking & Maps" },
+  { icon: FaWifi, label: "SEO & Analytics" },
+  { icon: FaTools, label: "Content Changes" },
+];
+
+const REPAIRS = [
   { icon: SlScreenSmartphone, label: "Screen Replacement" },
-  { icon: IoIosWater, label: "Water Damage" },
+  { icon: FaBatteryHalf, label: "Battery Replacement" },
+  { icon: PiPlugChargingFill, label: "Charging Port" },
   { icon: FaCamera, label: "Cameras" },
-  { icon: IoGameController, label: "Game Controllers" },
+  { icon: IoIosWater, label: "Water Damage" },
+  { icon: FaMobileAlt, label: "Diagnostics" },
 ];
 
-const IT_SERVICES = [
-  { icon: FaGlobe, label: "Web Development" },
-  { icon: MdComputer, label: "IT Support & Troubleshooting" },
-  { icon: FaWifi, label: "Wi-Fi Setup & Cabling" },
-  { icon: FaDatabase, label: "Data Recovery & Backup" },
-  { icon: FaCloud, label: "Cloud Setup & Migration" },
+const IT_NETWORK = [
+  { icon: FaWifi, label: "Wi‑Fi & Networking" },
+  { icon: MdComputer, label: "POS & Device Setup" },
+  { icon: FaCloud, label: "Email / 365 / Google" },
+  { icon: FaDatabase, label: "Backups & Recovery" },
   { icon: FaLock, label: "Cybersecurity Basics" },
+  { icon: FaTools, label: "On‑site Support" },
 ];
 
-const PARTS_SUPPLY = [
-  { icon: FaBoxOpen, label: "Wholesale Parts" },
+const ACCESSORIES = [
+  { icon: FaShoppingBag, label: "Cases & Protectors" },
+  { icon: FaBolt, label: "Cables & Adapters" },
+  { icon: FaBatteryHalf, label: "Power Banks & Chargers" },
+  { icon: IoGameController, label: "Gaming Controllers" },
+  { icon: FaMobileAlt, label: "Headphones & Earbuds" },
+  { icon: FaTools, label: "Mounts & Stands" },
+];
+
+const SUPPLY_WHOLESALE = [
   { icon: SlScreenSmartphone, label: "Screens & Digitizers" },
   { icon: FaBatteryHalf, label: "Batteries" },
   { icon: PiPlugChargingFill, label: "Charging Ports" },
-  { icon: FaBolt, label: "Cables & Adapters" },
+  { icon: FaBolt, label: "Cables (Bulk)" },
   { icon: FaTools, label: "Tools & Adhesives" },
+  { icon: FaBoxOpen, label: "Bulk Accessories" },
 ];
 
-/** ---------- Motion variants ---------- */
-const containerVariants = {
+/** ---------- Motion (subtle) ---------- */
+const container = {
   hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.12, when: "beforeChildren" },
-  },
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } },
+};
+const item = {
+  hidden: { opacity: 0, y: 6 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-};
-
-/** ---------- Reusable pieces ---------- */
+/** ---------- Small, accessible card ---------- */
 const Card = ({ Icon, label }) => (
   <motion.div
-    variants={itemVariants}
-    className="flex flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 p-6 text-neutral-100 shadow-md backdrop-blur transition hover:scale-[1.03] hover:bg-white/10"
+    variants={item}
+    className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 hover:bg-slate-50"
+    role="listitem"
   >
-    <Icon className="mb-4 h-14 w-14 drop-shadow-lg sm:h-16 sm:w-16" />
-    <p className="text-center text-base font-medium sm:text-lg">{label}</p>
+    <Icon aria-hidden className="h-6 w-6" />
+    <span className="text-sm font-medium leading-none">{label}</span>
   </motion.div>
 );
 
-const SectionGrid = ({ id, title, items }) => (
-  <section id={id} aria-labelledby={`${id}-title`} className="mt-10">
+const Section = ({ id, title, items, hint }) => (
+  <section id={id} aria-labelledby={`${id}-title`} className="space-y-3">
     <motion.h3
       id={`${id}-title`}
-      variants={itemVariants}
-      className="mb-4 text-center text-2xl font-semibold sm:text-3xl"
+      variants={item}
+      className="text-base font-semibold tracking-tight text-slate-900"
     >
       {title}
     </motion.h3>
-    <div className="grid w-full grid-cols-2 gap-6 sm:grid-cols-3 md:gap-8">
+    {hint && (
+      <motion.p variants={item} className="text-xs text-slate-500">
+        {hint}
+      </motion.p>
+    )}
+    <div
+      role="list"
+      className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4"
+    >
       {items.map(({ icon: Icon, label }) => (
         <Card key={label} Icon={Icon} label={label} />
       ))}
@@ -94,63 +125,85 @@ const SectionGrid = ({ id, title, items }) => (
   </section>
 );
 
-/** ---------- Main component ---------- */
-export default function Services({
-  backgroundSrc = ServicesBg,
-  heading = "Our Services",
-  parts = PARTS_SUPPLY,
-  repairs = REPAIR_SERVICES,
-  it = IT_SERVICES,
-  showParts = true, // toggle sections if you want
+/** ---------- Main component (aligned to DeviceLab) ---------- */
+export default function ServicesMinimal({
+  heading = "DeviceLab Services",
+  showWeb = true,
   showRepairs = true,
   showIT = true,
+  showAccessories = true,
+  showSupply = true,
+  className = "",
 }) {
-  const bg = backgroundSrc || ServicesBg;
-
   return (
     <section
-      className="relative flex w-full min-h-[100vh] items-center justify-center overflow-hidden bg-slate-950"
       aria-label="DeviceLab services"
+      className={`w-full bg-white ${className}`}
     >
-      {/* Background image */}
-      <div className="absolute inset-0">
-        <img
-          src={bg}
-          alt="Collage of device repair, IT, and parts supply services"
-          className="h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/75" />
-      </div>
-
-      {/* Content */}
       <motion.div
         initial="hidden"
-        animate="show"
-        variants={containerVariants}
-        className="relative z-10 w-full max-w-6xl px-4 py-16 text-neutral-100"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={container}
+        className="mx-auto max-w-6xl px-4 py-12 sm:py-16"
       >
         <motion.h2
-          variants={itemVariants}
-          className="mb-10 text-center text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
+          variants={item}
+          className="mb-8 text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"
         >
           {heading}
         </motion.h2>
 
-        {showParts && (
-          <SectionGrid id="parts" title="Parts Supply" items={parts} />
-        )}
-        {showRepairs && (
-          <SectionGrid id="repairs" title="Repairs" items={repairs} />
-        )}
-        {showIT && <SectionGrid id="it" title="IT Services" items={it} />}
+        <div className="space-y-10">
+          {showWeb && (
+            <Section
+              id="web"
+              title="Website Subscriptions"
+              hint="Website, Hosting & Maintenance — All Included. Ask about 3 months with no payment."
+              items={WEBSITE_SUBSCRIPTION}
+            />
+          )}
 
-        {/* Optional: a small note or CTA row */}
+          {showRepairs && (
+            <Section
+              id="repairs"
+              title="Phone & Device Repairs"
+              items={REPAIRS}
+            />
+          )}
+
+          {showIT && (
+            <Section
+              id="it"
+              title="Business IT & Networking"
+              items={IT_NETWORK}
+            />
+          )}
+
+          {showAccessories && (
+            <Section
+              id="accessories"
+              title="Accessories & Add‑ons"
+              items={ACCESSORIES}
+            />
+          )}
+
+          {showSupply && (
+            <Section
+              id="supply"
+              title="Parts Supply (Wholesale)"
+              items={SUPPLY_WHOLESALE}
+            />
+          )}
+        </div>
+
+        {/* Quiet CTA */}
         <motion.div
-          variants={itemVariants}
-          className="mt-12 flex items-center justify-center gap-3 text-sm text-white/80"
+          variants={item}
+          className="mt-10 flex items-center justify-center gap-2 text-xs text-slate-500"
         >
-          <FaMobileAlt className="h-4 w-4" />
-          <span>Need something specific? Get a custom quote in minutes.</span>
+          <FaMobileAlt aria-hidden className="h-4 w-4" />
+          <span>Need something specific? Request a custom quote.</span>
         </motion.div>
       </motion.div>
     </section>

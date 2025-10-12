@@ -1,29 +1,54 @@
 import React, { useMemo, useState } from "react";
-import emailjs from "@emailjs/browser"; // <- modern SDK
 import { motion } from "framer-motion";
-import { Mail, Phone, User, MessageSquare, Send } from "lucide-react";
-import ContactBG from "../images/contact.jpg"; // fallback / default background
+import emailjs from "@emailjs/browser";
+import {
+  Mail,
+  Phone,
+  User,
+  MessageSquare,
+  Send,
+  Globe,
+  Wrench,
+  Network,
+  Package,
+  ShoppingBag,
+} from "lucide-react";
 
+/**
+ * Contact — Minimal & Clear (DeviceLab‑aligned)
+ * Sections match DeviceLab's structure and route inquiries by category:
+ *  - Website Subscriptions
+ *  - Phone & Device Repairs
+ *  - Business IT & Networking
+ *  - Accessories (Retail)
+ *  - Parts Supply (Wholesale)
+ *
+ * Lightweight (no heavy backgrounds), accessible, and mobile‑first.
+ */
+
+/* ---------- Motion ---------- */
 const container = {
   hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, when: "beforeChildren" },
-  },
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } },
 };
 const item = {
-  hidden: { opacity: 0, y: 10 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
+  hidden: { opacity: 0, y: 6 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
 };
 
-export default function Contact({
+/* ---------- Helper ---------- */
+const isValidEmail = (v) => /[^\s@]+@[^\s@]+\.[^\s@]+/.test((v || "").trim());
+const isValidPhone = (v) =>
+  (v || "").trim() === "" || /^\+?\d[\d\s().-]{6,}$/.test((v || "").trim());
+
+export default function ContactMinimal({
   id = "contact",
-  heading = "Contact Us",
-  phoneDisplay = "+17802469743",
+  heading = "Contact DeviceLab",
+  phoneDisplay = "+1 (780) 246‑9743",
   phoneE164 = "+17802469743",
   email = "thedevicelab8@gmail.com",
   whatsapp = "https://wa.me/17802469743",
-  // allow overriding EmailJS config via props (else use env)
+  // EmailJS config (fallback to env if not provided)
   emailjsServiceId = process.env.REACT_APP_EMAILJS_SERVICE_ID,
   emailjsTemplateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
   emailjsPublicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY,
@@ -33,15 +58,11 @@ export default function Contact({
     email: "",
     number: "",
     message: "",
-    company: "",
-    _hp: "", // honeypot
+    topic: "web",
+    _hp: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState({ type: null, msg: "" });
-
-  const isValidEmail = (v) => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(v.trim());
-  const isValidPhone = (v) =>
-    v.trim() === "" || /^\+?\d[\d\s().-]{6,}$/.test(v.trim());
 
   const errors = useMemo(() => {
     const e = {};
@@ -55,7 +76,6 @@ export default function Contact({
     return e;
   }, [formData]);
 
-  // very basic 30s rate limit per tab
   const tooSoon = () => {
     const last = Number(sessionStorage.getItem("dl_last_contact_ts") || 0);
     return Date.now() - last < 30_000;
@@ -69,45 +89,39 @@ export default function Contact({
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ type: null, msg: "" });
-
-    if (formData._hp) return; // bot caught
-
-    if (Object.keys(errors).length) {
-      setStatus({ type: "error", msg: "Please fix the highlighted fields." });
-      return;
-    }
-    if (tooSoon()) {
-      setStatus({
+    if (formData._hp) return; // bot honeypot
+    if (Object.keys(errors).length)
+      return setStatus({
+        type: "error",
+        msg: "Please fix the highlighted fields.",
+      });
+    if (tooSoon())
+      return setStatus({
         type: "error",
         msg: "Please wait a few seconds before sending again.",
       });
-      return;
-    }
     if (!emailjsServiceId || !emailjsTemplateId || !emailjsPublicKey) {
-      setStatus({
+      console.error("Missing EmailJS config");
+      return setStatus({
         type: "error",
-        msg: "Email service is not configured. Please try again later.",
+        msg: "Email service not configured. Please try again later.",
       });
-      console.error("Missing EmailJS env/config.");
-      return;
     }
 
     setIsSubmitting(true);
-
     const now = new Date();
     const time = now.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
-
     const templateParams = {
       title: "Customer Inquiry",
       name: formData.name,
       email: formData.email,
       phone: formData.number,
       message: formData.message,
+      topic: formData.topic,
       time,
-      // add any other template variables you defined on EmailJS
     };
 
     try {
@@ -117,14 +131,14 @@ export default function Contact({
       sessionStorage.setItem("dl_last_contact_ts", String(Date.now()));
       setStatus({
         type: "success",
-        msg: "Your message has been sent! We'll get back to you shortly.",
+        msg: "Thanks! Your message has been sent.",
       });
       setFormData({
         name: "",
         email: "",
         number: "",
         message: "",
-        company: "",
+        topic: formData.topic,
         _hp: "",
       });
     } catch (err) {
@@ -138,21 +152,21 @@ export default function Contact({
     }
   };
 
-  // JSON-LD for ContactPage / Organization
+  // JSON-LD (ContactPage / Organization)
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ContactPage",
     mainEntity: {
       "@type": "Organization",
       name: "The DeviceLab",
-      email: email,
+      email,
       telephone: phoneE164,
       contactPoint: [
         {
           "@type": "ContactPoint",
           contactType: "customer support",
           telephone: phoneE164,
-          email: email,
+          email,
           areaServed: "CA-AB",
           availableLanguage: ["en"],
         },
@@ -160,10 +174,44 @@ export default function Contact({
     },
   };
 
+  const cards = [
+    {
+      key: "web",
+      icon: Globe,
+      title: "Website Subscriptions",
+      blurb: "Sites + hosting + maintenance.",
+    },
+    {
+      key: "repairs",
+      icon: Wrench,
+      title: "Phone & Device Repairs",
+      blurb: "Screens, batteries, ports, more.",
+    },
+    {
+      key: "it",
+      icon: Network,
+      title: "Business IT & Networking",
+      blurb: "Wi‑Fi, POS, backups, support.",
+    },
+    {
+      key: "retail",
+      icon: ShoppingBag,
+      title: "Accessories (Retail)",
+      blurb: "Cases, cables, audio, add‑ons.",
+    },
+    {
+      key: "supply",
+      icon: Package,
+      title: "Parts Supply (Wholesale)",
+      blurb: "Screens, tools, bulk accessories.",
+    },
+  ];
+
   return (
     <section
       id={id}
-      className="relative flex min-h-[100vh] w-full items-center justify-center overflow-hidden"
+      aria-labelledby={`${id}-title`}
+      className="w-full bg-white"
     >
       {/* SEO JSON-LD */}
       <script
@@ -171,38 +219,58 @@ export default function Contact({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Background */}
-      <div className="absolute inset-0">
-        <img
-          src={ContactBG}
-          alt="Abstract tech contact background"
-          className="h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/50 to-slate-900/80" />
-      </div>
-
       <motion.div
         initial="hidden"
-        animate="show"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
         variants={container}
-        className="relative z-10 w-full max-w-5xl px-4 py-8 text-neutral-100"
+        className="mx-auto max-w-6xl px-4 py-12 sm:py-16"
       >
         <motion.h1
+          id={`${id}-title`}
           variants={item}
-          className="mb-6 text-center text-4xl font-bold sm:text-5xl"
+          className="mb-8 text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"
         >
           {heading}
         </motion.h1>
 
-        <div className="mx-auto grid gap-8 md:grid-cols-2">
+        {/* Category cards */}
+        <motion.div
+          variants={item}
+          className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3"
+        >
+          {cards.map(({ key, icon: Icon, title, blurb }) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setFormData((s) => ({ ...s, topic: key }))}
+              className={`flex items-start gap-3 rounded-xl border px-4 py-3 text-left transition hover:bg-slate-50 ${
+                formData.topic === key
+                  ? "border-slate-900 bg-slate-50"
+                  : "border-slate-200 bg-white"
+              }`}
+              aria-pressed={formData.topic === key}
+            >
+              <Icon className="mt-0.5 h-5 w-5 text-slate-700" />
+              <div>
+                <div className="text-sm font-semibold text-slate-900">
+                  {title}
+                </div>
+                <div className="text-xs text-slate-600">{blurb}</div>
+              </div>
+            </button>
+          ))}
+        </motion.div>
+
+        <div className="mt-8 grid gap-8 md:grid-cols-2">
           {/* Form */}
           <motion.form
             variants={item}
             onSubmit={handleSubmit}
             noValidate
-            className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur"
+            className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
           >
-            {/* Honeypot (hidden) */}
+            {/* Honeypot */}
             <input
               type="text"
               name="_hp"
@@ -215,122 +283,136 @@ export default function Contact({
             />
 
             <div className="grid gap-4">
-              <label className="flex flex-col gap-2">
-                <span className="text-sm">Name</span>
-                <div
-                  className={`flex items-center gap-2 rounded-lg border px-3 py-2 ${
-                    errors.name ? "border-red-400" : "border-white/15"
-                  }`}
+              <div className="grid gap-2">
+                <label
+                  htmlFor="topic"
+                  className="text-xs font-medium text-slate-700"
                 >
-                  <User className="h-4 w-4 opacity-70" />
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full bg-transparent outline-none placeholder:text-neutral-400"
-                    placeholder="Your full name"
-                    aria-invalid={!!errors.name}
-                    aria-describedby={errors.name ? "name-err" : undefined}
-                  />
-                </div>
+                  Inquiry Type
+                </label>
+                <select
+                  id="topic"
+                  name="topic"
+                  value={formData.topic}
+                  onChange={handleChange}
+                  className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
+                >
+                  <option value="web">Website Subscriptions</option>
+                  <option value="repairs">Phone & Device Repairs</option>
+                  <option value="it">Business IT & Networking</option>
+                  <option value="retail">Accessories (Retail)</option>
+                  <option value="supply">Parts Supply (Wholesale)</option>
+                </select>
+              </div>
+
+              <label className="flex flex-col gap-1">
+                <span className="text-xs font-medium text-slate-700">Name</span>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
+                    errors.name
+                      ? "border-red-300 focus:ring-red-200"
+                      : "border-slate-300 focus:ring-slate-900"
+                  }`}
+                  placeholder="Your full name"
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? "name-err" : undefined}
+                />
                 {errors.name && (
-                  <span id="name-err" className="text-xs text-red-300">
+                  <span id="name-err" className="text-xs text-red-500">
                     {errors.name}
                   </span>
                 )}
               </label>
 
-              <label className="flex flex-col gap-2">
-                <span className="text-sm">Email</span>
-                <div
-                  className={`flex items-center gap-2 rounded-lg border px-3 py-2 ${
-                    errors.email ? "border-red-400" : "border-white/15"
+              <label className="flex flex-col gap-1">
+                <span className="text-xs font-medium text-slate-700">
+                  Email
+                </span>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
+                    errors.email
+                      ? "border-red-300 focus:ring-red-200"
+                      : "border-slate-300 focus:ring-slate-900"
                   }`}
-                >
-                  <Mail className="h-4 w-4 opacity-70" />
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full bg-transparent outline-none placeholder:text-neutral-400"
-                    placeholder="you@example.com"
-                    aria-invalid={!!errors.email}
-                    aria-describedby={errors.email ? "email-err" : undefined}
-                  />
-                </div>
+                  placeholder="you@example.com"
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? "email-err" : undefined}
+                />
                 {errors.email && (
-                  <span id="email-err" className="text-xs text-red-300">
+                  <span id="email-err" className="text-xs text-red-500">
                     {errors.email}
                   </span>
                 )}
               </label>
 
-              <label className="flex flex-col gap-2">
-                <span className="text-sm">Phone (optional)</span>
-                <div
-                  className={`flex items-center gap-2 rounded-lg border px-3 py-2 ${
-                    errors.number ? "border-red-400" : "border-white/15"
+              <label className="flex flex-col gap-1">
+                <span className="text-xs font-medium text-slate-700">
+                  Phone (optional)
+                </span>
+                <input
+                  type="tel"
+                  inputMode="tel"
+                  name="number"
+                  value={formData.number}
+                  onChange={handleChange}
+                  className={`w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
+                    errors.number
+                      ? "border-red-300 focus:ring-red-200"
+                      : "border-slate-300 focus:ring-slate-900"
                   }`}
-                >
-                  <Phone className="h-4 w-4 opacity-70" />
-                  <input
-                    type="tel"
-                    inputMode="tel"
-                    name="number"
-                    value={formData.number}
-                    onChange={handleChange}
-                    className="w-full bg-transparent outline-none placeholder:text-neutral-400"
-                    placeholder="+1 (825) 785-7009"
-                    aria-invalid={!!errors.number}
-                    aria-describedby={errors.number ? "phone-err" : undefined}
-                  />
-                </div>
+                  placeholder="+1 (825) 204-7832"
+                  aria-invalid={!!errors.number}
+                  aria-describedby={errors.number ? "phone-err" : undefined}
+                />
                 {errors.number && (
-                  <span id="phone-err" className="text-xs text-red-300">
+                  <span id="phone-err" className="text-xs text-red-500">
                     {errors.number}
                   </span>
                 )}
               </label>
 
-              <label className="flex flex-col gap-2">
-                <span className="text-sm">Inquiry</span>
-                <div
-                  className={`rounded-lg border ${
-                    errors.message ? "border-red-400" : "border-white/15"
+              <label className="flex flex-col gap-1">
+                <span className="text-xs font-medium text-slate-700">
+                  Inquiry
+                </span>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  rows={5}
+                  className={`w-full resize-y rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
+                    errors.message
+                      ? "border-red-300 focus:ring-red-200"
+                      : "border-slate-300 focus:ring-slate-900"
                   }`}
-                >
-                  <div className="flex items-start gap-2 px-3 py-2">
-                    <MessageSquare className="mt-2 h-4 w-4 opacity-70" />
-                    <textarea
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      rows={5}
-                      className="w-full resize-y bg-transparent outline-none placeholder:text-neutral-400"
-                      placeholder="Please state your inquiry here..."
-                      aria-invalid={!!errors.message}
-                      aria-describedby={errors.message ? "msg-err" : undefined}
-                    />
-                  </div>
-                </div>
+                  placeholder="Please state your inquiry here..."
+                  aria-invalid={!!errors.message}
+                  aria-describedby={errors.message ? "msg-err" : undefined}
+                />
                 {errors.message && (
-                  <span id="msg-err" className="text-xs text-red-300">
+                  <span id="msg-err" className="text-xs text-red-500">
                     {errors.message}
                   </span>
                 )}
               </label>
 
-              <div className="mt-2 flex items-center gap-3">
+              <div className="mt-1 flex items-center gap-3">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`inline-flex items-center gap-2 rounded-2xl border border-cyan-300/60 bg-slate-900/70 px-5 py-2.5 font-medium backdrop-blur transition hover:scale-[1.02] hover:border-cyan-300 hover:bg-slate-900/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 ${
-                    isSubmitting ? "opacity-60 cursor-not-allowed" : ""
+                  className={`inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 ${
+                    isSubmitting ? "cursor-not-allowed opacity-60" : ""
                   }`}
                 >
                   <Send className="h-4 w-4" />
@@ -341,47 +423,75 @@ export default function Contact({
                   aria-live="polite"
                   className={`text-sm ${
                     status.type === "success"
-                      ? "text-green-300"
+                      ? "text-green-600"
                       : status.type === "error"
-                      ? "text-red-300"
-                      : "text-transparent"
+                      ? "text-red-600"
+                      : "text-slate-400"
                   }`}
                 >
-                  {status.msg || "placeholder"}
+                  {status.msg || ""}
                 </span>
               </div>
             </div>
           </motion.form>
 
-          {/* Contact details / blurb */}
+          {/* Direct contacts */}
           <motion.aside
             variants={item}
-            className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur"
+            className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
           >
-            <h2 className="text-2xl font-semibold">Reach us directly</h2>
-            <p className="mt-2 text-sm text-neutral-200">
+            <h2 className="text-lg font-semibold text-slate-900">
+              Reach us directly
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">
               Text a photo of the issue for a quick quote, or tell us about your
               web/IT project.
             </p>
-            <div className="mt-6 space-y-3 text-sm">
+            <div className="mt-5 space-y-3 text-sm">
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4" />
-                <a href={`tel:${phoneE164}`} className="hover:underline">
-                  Call / Text: {phoneDisplay}
+                <Phone className="h-4 w-4 text-slate-700" />
+                <a
+                  href={`tel:${phoneE164}`}
+                  className="text-slate-900 underline-offset-2 hover:underline"
+                >
+                  {phoneDisplay}
                 </a>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                <a href={`mailto:${email}`} className="hover:underline">
+                <Mail className="h-4 w-4 text-slate-700" />
+                <a
+                  href={`mailto:${email}`}
+                  className="text-slate-900 underline-offset-2 hover:underline"
+                >
                   {email}
                 </a>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                <a href={whatsapp} className="hover:underline">
+                <Mail className="h-4 w-4 text-slate-700" />
+                <a
+                  href={whatsapp}
+                  className="text-slate-900 underline-offset-2 hover:underline"
+                >
                   WhatsApp
                 </a>
               </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              {cards.map(({ key, title }) => (
+                <button
+                  key={`mini-${key}`}
+                  type="button"
+                  onClick={() => setFormData((s) => ({ ...s, topic: key }))}
+                  className={`rounded-lg border px-3 py-2 text-left text-xs transition hover:bg-slate-50 ${
+                    formData.topic === key
+                      ? "border-slate-900"
+                      : "border-slate-200"
+                  }`}
+                >
+                  {title}
+                </button>
+              ))}
             </div>
           </motion.aside>
         </div>

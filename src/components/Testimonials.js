@@ -1,75 +1,26 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-// Assets (use imports instead of /src/... paths)
-import Face1 from "../images/face1.jpg";
-import Face2 from "../images/face2.jpg";
-import Face3 from "../images/face3.jpg";
-import Face4 from "../images/face4.jpg";
-import TestimonialBg from "../images/testimonialBG.jpg";
+/**
+ * Testimonials — Minimal & Clear (DeviceLab-aligned)
+ * Sections match DeviceLab structure:
+ *  - Website Subscriptions
+ *  - Phone & Device Repairs
+ *  - Business IT & Networking
+ *  - Accessories & Add-ons (Retail)
+ *  - Parts Supply (Wholesale)
+ *
+ * Keep it lightweight: no background images, subtle motion, readable cards.
+ */
 
-/* ---------- Defaults (override via props) ---------- */
-const DEFAULT_TESTIMONIALS = [
-  {
-    quote:
-      "My phone screen was fixed in under 30 minutes and it looks brand new. They also helped me back up my data and clean up my storage — excellent service!",
-    name: "Sarah L.",
-    title: "Student — Edmonton",
-    img: Face1,
-    stars: 5,
-  },
-  {
-    quote:
-      "They built our business website and connected it with our online store. Everything from product uploads to payments works perfectly. Orders come straight to my phone.",
-    name: "James M.",
-    title: "Owner, TechZone Mobile Repairs",
-    img: Face2,
-    stars: 5,
-  },
-  {
-    quote:
-      "We needed an online store that looked professional but didn’t break the bank. Their e-commerce setup and hosting are fast and reliable — sales are up 40%!",
-    name: "Bianca C.",
-    title: "Founder, Luxe Accessories",
-    img: Face3,
-    stars: 5,
-  },
-  {
-    quote:
-      "I manage multiple phone repair shops. They created a single website with booking, maps, and live chat for all our locations. It boosted walk-ins immediately.",
-    name: "Kevin T.",
-    title: "Regional Manager, FixPro Group",
-    img: Face4,
-    stars: 4,
-  },
-  {
-    quote:
-      "They designed our website and set up a repair request form that integrates directly with our CRM. It saves me hours every week.",
-    name: "Ava R.",
-    title: "Owner, SmartCell Repairs",
-    img: Face2,
-    stars: 5,
-  },
-  {
-    quote:
-      "From web design to SEO and online ads, they helped me grow my repair business. I now get consistent bookings through my site every day.",
-    name: "Omar H.",
-    title: "Freelance Technician — Alberta",
-    img: Face1,
-    stars: 5,
-  },
-];
 /* ---------- Motion ---------- */
-const containerVariants = {
+const container = {
   hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, when: "beforeChildren" },
-  },
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } },
 };
-const itemVariants = {
-  hidden: { opacity: 0, y: 14 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
+const item = {
+  hidden: { opacity: 0, y: 8 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
 };
 
 /* ---------- UI ---------- */
@@ -86,69 +37,213 @@ const StarRow = ({ count = 5 }) => (
   </div>
 );
 
-export default function Testimonials({
-  id = "testimonials",
-  heading = "What Clients Say About Our IT Services",
-  testimonials = DEFAULT_TESTIMONIALS,
-  backgroundSrc = TestimonialBg,
-}) {
-  const bg = backgroundSrc || TestimonialBg;
+const Card = ({ quote, name, title, stars = 5 }) => (
+  <motion.figure
+    variants={item}
+    className="rounded-xl border border-slate-200 bg-white p-5 text-slate-800 shadow-sm hover:bg-slate-50"
+  >
+    <blockquote className="text-sm leading-relaxed text-slate-700">
+      “{quote}”
+    </blockquote>
+    <figcaption className="mt-4 flex items-center gap-3">
+      <div className="flex flex-col">
+        <span className="text-sm font-semibold text-slate-900">{name}</span>
+        {title ? <span className="text-xs text-slate-500">{title}</span> : null}
+      </div>
+      <div className="ml-auto text-amber-400">
+        <StarRow count={stars} />
+      </div>
+    </figcaption>
+  </motion.figure>
+);
 
+const Section = ({ id, title, items }) => (
+  <section id={id} aria-labelledby={`${id}-title`} className="space-y-4">
+    <motion.h3
+      id={`${id}-title`}
+      variants={item}
+      className="text-base font-semibold tracking-tight text-slate-900"
+    >
+      {title}
+    </motion.h3>
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+      {items.map((t, i) => (
+        <Card key={`${t.name}-${i}`} {...t} />
+      ))}
+    </div>
+  </section>
+);
+
+/* ---------- Defaults (DeviceLab-aligned) ---------- */
+const T_WEB = [
+  {
+    quote:
+      "They launched our site and handle updates and hosting, so we can focus on sales. Bookings doubled in 6 weeks.",
+    name: "Maya S.",
+    title: "Owner — Salon & Spa",
+    stars: 5,
+  },
+  {
+    quote:
+      "The $99/month plan was perfect to start. Clean design, fast load times, and edits are included.",
+    name: "Andre P.",
+    title: "Café Manager",
+    stars: 5,
+  },
+  {
+    quote:
+      "They migrated us from Wix and fixed our SEO basics. We show up on Maps now.",
+    name: "Colin R.",
+    title: "Contractor",
+    stars: 5,
+  },
+];
+
+const T_REPAIRS = [
+  {
+    quote:
+      "Screen was replaced the same day and they transferred my data. Looks brand new.",
+    name: "Sarah L.",
+    title: "Student",
+    stars: 5,
+  },
+  {
+    quote:
+      "Battery swap and charging port fix took under an hour. Honest pricing.",
+    name: "Naveen K.",
+    title: "Rideshare Driver",
+    stars: 5,
+  },
+  {
+    quote: "They recovered photos from a water-damaged phone — lifesavers!",
+    name: "Lauren D.",
+    title: "Photographer",
+    stars: 5,
+  },
+];
+
+const T_IT = [
+  {
+    quote:
+      "They set up our POS, Wi‑Fi, and backups. Month-end is finally smooth.",
+    name: "James M.",
+    title: "Retail & Repair Shop",
+    stars: 5,
+  },
+  {
+    quote:
+      "Microsoft 365 migration overnight, trained our team next morning. Zero downtime.",
+    name: "Bianca C.",
+    title: "Construction Ops",
+    stars: 5,
+  },
+  {
+    quote: "Quick response SLAs. Most tickets solved same day.",
+    name: "Aiden F.",
+    title: "Dental Clinic",
+    stars: 5,
+  },
+];
+
+const T_ACCESSORIES = [
+  {
+    quote:
+      "Bundle pricing on cases and tempered glass for our staff — simple perks that our team loves.",
+    name: "Leah M.",
+    title: "Practice Manager",
+    stars: 5,
+  },
+  {
+    quote: "Picked up chargers and headsets with the repair — one stop.",
+    name: "Marco R.",
+    title: "Courier",
+    stars: 5,
+  },
+];
+
+const T_SUPPLY = [
+  {
+    quote:
+      "Consistent screen quality and fair terms. We switched most of our parts orders to them.",
+    name: "Kevin T.",
+    title: "Regional Manager — Repair Chain",
+    stars: 4,
+  },
+  {
+    quote: "Bulk cables and adhesives delivered fast. Reliable vendor.",
+    name: "Omar H.",
+    title: "Independent Tech",
+    stars: 5,
+  },
+];
+
+/**
+ * Main component
+ */
+export default function TestimonialsMinimal({
+  id = "testimonials",
+  heading = "What Clients Say",
+  web = T_WEB,
+  repairs = T_REPAIRS,
+  it = T_IT,
+  accessories = T_ACCESSORIES,
+  supply = T_SUPPLY,
+  showWeb = true,
+  showRepairs = true,
+  showIT = true,
+  showAccessories = true,
+  showSupply = true,
+  className = "",
+}) {
   return (
     <section
       id={id}
-      className="relative flex min-h-[100vh] w-full items-center justify-center overflow-hidden bg-slate-950"
       aria-labelledby={`${id}-title`}
+      className={`w-full bg-white ${className}`}
     >
-      {/* Background */}
-      <div className="absolute inset-0">
-        <img
-          src={bg}
-          alt="Abstract background with subtle tech texture"
-          className="h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/55 to-black/75" />
-      </div>
-
-      {/* Content */}
       <motion.div
         initial="hidden"
-        animate="show"
-        variants={containerVariants}
-        className="relative z-10 mx-auto w-full max-w-6xl px-4 py-12 text-neutral-100"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={container}
+        className="mx-auto max-w-6xl px-4 py-12 sm:py-16"
       >
         <motion.h2
           id={`${id}-title`}
-          variants={itemVariants}
-          className="mb-10 text-center text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
+          variants={item}
+          className="mb-8 text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"
         >
           {heading}
         </motion.h2>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {testimonials.map((t, idx) => (
-            <motion.figure
-              key={`${t.name}-${idx}`}
-              variants={itemVariants}
-              className="rounded-2xl border border-white/10 bg-white/5 p-6 text-neutral-100 shadow-md backdrop-blur transition hover:scale-[1.02]"
-            >
-              <blockquote className="text-pretty text-lg italic leading-relaxed">
-                “{t.quote}”
-              </blockquote>
-
-              <figcaption className="mt-5 flex items-center gap-4">
-                <div className="flex flex-col">
-                  <span className="font-semibold">{t.name}</span>
-                  {t.title ? (
-                    <span className="text-sm text-neutral-300">{t.title}</span>
-                  ) : null}
-                </div>
-                <div className="ml-auto text-yellow-400">
-                  <StarRow count={t.stars} />
-                </div>
-              </figcaption>
-            </motion.figure>
-          ))}
+        <div className="space-y-10">
+          {showWeb && (
+            <Section id="web" title="Website Subscriptions" items={web} />
+          )}
+          {showRepairs && (
+            <Section
+              id="repairs"
+              title="Phone & Device Repairs"
+              items={repairs}
+            />
+          )}
+          {showIT && (
+            <Section id="it" title="Business IT & Networking" items={it} />
+          )}
+          {showAccessories && (
+            <Section
+              id="accessories"
+              title="Accessories & Add‑ons"
+              items={accessories}
+            />
+          )}
+          {showSupply && (
+            <Section
+              id="supply"
+              title="Parts Supply (Wholesale)"
+              items={supply}
+            />
+          )}
         </div>
       </motion.div>
     </section>

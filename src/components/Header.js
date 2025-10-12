@@ -13,6 +13,7 @@ export default function Header({
   onAboutClick,
   onServicesClick,
   onContactClick,
+  onShopLocatorClick,
   links,
 }) {
   const [open, setOpen] = useState(false);
@@ -82,6 +83,9 @@ export default function Header({
           <NavButton onClick={onAboutClick} href={links?.about}>
             About
           </NavButton>
+          <NavButton onClick={onShopLocatorClick} href={links?.shopLocator}>
+            Find A Store
+          </NavButton>
         </nav>
 
         {/* Mobile toggle */}
@@ -134,6 +138,15 @@ export default function Header({
               href={links?.about}
             >
               About
+            </NavButton>
+            <NavButton
+              onClick={() => {
+                setOpen(false);
+                onShopLocatorClick && onShopLocatorClick();
+              }}
+              href={links?.shopLocator}
+            >
+              Find A Store
             </NavButton>
           </div>
         </div>
