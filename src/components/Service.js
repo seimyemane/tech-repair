@@ -185,7 +185,7 @@ export default function DeviceLabServiceSelector({
         whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
         variants={container}
-        className="mx-auto max-w-6xl px-4 py-12 sm:py-16 "
+        className="mx-auto max-w-6xl px-4 py-12 sm:py-16 flex justify-center items-center flex-col"
       >
         <motion.h2
           variants={item}
@@ -202,7 +202,7 @@ export default function DeviceLabServiceSelector({
 
         <motion.div
           variants={container}
-          className="flex flex-col justify-around items-center sm:flex-col  md:flex-col lg:flex-row gap-6"
+          className=" flex flex-col justify-around items-center sm:flex-col  md:flex-col   lg:flex-row gap-6 md:w-1/2 lg:w-full"
         >
           {items.map((d) => (
             <ServiceCard
