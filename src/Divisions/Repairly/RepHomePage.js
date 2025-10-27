@@ -47,7 +47,11 @@ const RepHomePage = () => {
         }
       />
       <div ref={pricingRef}>
-        <RepPricing />
+        <RepPricing
+          scrollToContact={() =>
+            contactRef.current.scrollIntoView({ behavior: "smooth" })
+          }
+        />
       </div>
       <div ref={galleryRef}>
         <RepGallery />

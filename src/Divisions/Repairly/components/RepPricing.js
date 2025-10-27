@@ -53,6 +53,7 @@ const RepPricing = ({
   subtext = "Transparent rates, no surprise fees. All repairs include diagnostics and a 90-day warranty.",
   items = repairs,
   className = "",
+  scrollToContact,
 }) => {
   return (
     <section className={`w-full bg-slate-50 ${className}`}>
@@ -87,12 +88,12 @@ const RepPricing = ({
                 <span className="text-sm font-semibold text-slate-900">
                   {price}
                 </span>
-                <a
-                  href="/division/repairs/book"
+                <button
+                  onClick={scrollToContact}
                   className="rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800"
                 >
                   Book Now
-                </a>
+                </button>
               </div>
             </motion.div>
           ))}
