@@ -41,8 +41,8 @@ export default function Hero({
   onGetQuoteClick,
   onPrimaryClick, // preferred
   onSecondaryClick, // preferred
-  headline = "DeviceLab — Tech Solutions for Supply, Repairs & IT",
-  sublineA = "Wholesale phone parts • iPhone & Samsung repairs • Websites & IT support",
+  headline = "DeviceLab — Tech Solutions for Web Development, Repairs & Supply",
+  sublineA = "Websites & IT support • Wholesale phone parts • iPhone & Samsung repairs  ",
   sublineB = "Serving Alberta businesses with faster delivery and one-stop service.",
   backgroundSrc,
   primaryCtaLabel = "Get a Free Quote",

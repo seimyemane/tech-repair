@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import LogoSrc from "../images/logo.png"; // ensure this is imported so bundler resolves it
+import HowItWorks from "./HowItWorks";
 
 /**
  * Header — sticky, accessible, responsive
@@ -83,9 +84,9 @@ export default function Header({
           <NavButton onClick={onAboutClick} href={links?.about}>
             About
           </NavButton>
-          <NavButton onClick={onShopLocatorClick} href={links?.shopLocator}>
+          {/* <NavButton onClick={onShopLocatorClick} href={links?.shopLocator}>
             Find A Store
-          </NavButton>
+          </NavButton> */}
         </nav>
 
         {/* Mobile toggle */}
@@ -139,7 +140,7 @@ export default function Header({
             >
               About
             </NavButton>
-            <NavButton
+            {/* <NavButton
               onClick={() => {
                 setOpen(false);
                 onShopLocatorClick && onShopLocatorClick();
@@ -147,7 +148,7 @@ export default function Header({
               href={links?.shopLocator}
             >
               Find A Store
-            </NavButton>
+            </NavButton> */}
           </div>
         </div>
       </div>

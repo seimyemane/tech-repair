@@ -2,14 +2,14 @@ import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Service from "./components/Service";
 import Testimonials from "./components/Testimonials";
+import WhyChooseUs from "./components/WhyChooseUs";
 import About from "./components/About";
 import React, { useRef } from "react";
 import FAQ from "./components/FAQ";
 
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
-import SampleSites from "./components/SampleSites";
-import ShopLocator from "./components/ShopLocator";
+
 import Chatbot from "./components/Chatbot";
 
 function App() {
@@ -51,15 +51,12 @@ function App() {
       <div ref={servicesRef}>
         <Service />
       </div>
-      {/* <div ref={shopLocatorRef}>
-        <ShopLocator />
-      </div> */}
       <div>
-        <SampleSites />
+        <WhyChooseUs />
       </div>
-      <div>
+      {/* <div>
         <Testimonials />
-      </div>
+      </div> */}
 
       <div ref={aboutRef}>
         <About />
@@ -70,9 +67,7 @@ function App() {
       <div ref={contactRef}>
         <Contact />
       </div>
-      {/* <div ref={chatbotRef}>
-        <Chatbot />
-      </div> */}
+
       <div>
         <Footer />
       </div>

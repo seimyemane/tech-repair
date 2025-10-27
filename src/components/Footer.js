@@ -52,7 +52,7 @@ export default function FooterMinimal({
                 dark ? "text-white" : "text-slate-900"
               }`}
             >
-              The DeviceLab
+              DeviceLab Inc.
             </h2>
             <p className="text-sm opacity-70">
               Web, IT & Repair Solutions in Edmonton
@@ -81,10 +81,10 @@ export default function FooterMinimal({
                   }`}
                 />
                 <a
-                  href="mailto:thedevicelab8@gmail.com"
+                  href="mailto:contact@thedevicelab.ca"
                   className="hover:underline"
                 >
-                  thedevicelab8@gmail.com
+                  contact@thedevicelab.ca
                 </a>
               </p>
               <p className="flex items-center justify-center gap-2 sm:justify-start">
@@ -94,7 +94,7 @@ export default function FooterMinimal({
                   }`}
                 />
                 <a href="https://wa.me/17802469743" className="hover:underline">
-                  WhatsApp / +1 (780) 246‑9743
+                  WhatsApp
                 </a>
               </p>
             </div>

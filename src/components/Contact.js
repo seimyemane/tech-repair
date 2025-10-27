@@ -44,9 +44,9 @@ const isValidPhone = (v) =>
 export default function ContactMinimal({
   id = "contact",
   heading = "Contact DeviceLab",
-  phoneDisplay = "+1 (780) 246‑9743",
-  phoneE164 = "+17802469743",
-  email = "thedevicelab8@gmail.com",
+  phoneDisplay = "+1 (825) 785‑7009",
+  phoneE164 = "+18257857009",
+  email = "contact@thedevicelab.ca",
   whatsapp = "https://wa.me/17802469743",
   // EmailJS config (fallback to env if not provided)
   emailjsServiceId = process.env.REACT_APP_EMAILJS_SERVICE_ID,
@@ -158,7 +158,7 @@ export default function ContactMinimal({
     "@type": "ContactPage",
     mainEntity: {
       "@type": "Organization",
-      name: "The DeviceLab",
+      name: "DeviceLab Inc.",
       email,
       telephone: phoneE164,
       contactPoint: [

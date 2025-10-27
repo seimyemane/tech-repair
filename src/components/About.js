@@ -11,9 +11,9 @@ import {
 import { motion } from "framer-motion";
 
 export default function About({
-  phone = "+17802469743",
-  displayPhone = "+17802469743",
-  email = "thedevicelab8@gmail.com",
+  phone = "+18257857009",
+  displayPhone = "+18257857009",
+  email = "contact@thedevicelab.ca",
 }) {
   const container = {
     hidden: { opacity: 0 },

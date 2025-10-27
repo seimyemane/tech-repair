@@ -40,9 +40,9 @@ const DEFAULT_FAQS = (
 
 export default function FAQ({
   id = "faq",
-  phoneE164 = "+17802469743", // tel: link format
-  phoneDisplay = "780-246-9743",
-  email = "thedevicelab8@gmail.com",
+  phoneE164 = "+18257857009", // tel: link format
+  phoneDisplay = "825-785-7009",
+  email = "contact@thedevicelab.ca",
   faqs, // optional override: [{ q, a }]
   heading = "Frequently Asked Questions",
 }) {
