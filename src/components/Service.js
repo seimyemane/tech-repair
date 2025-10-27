@@ -126,7 +126,7 @@ function ServiceCard({ title, Icon, tagline, points, href, onNavigate }) {
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") go(e);
       }}
-      className="relative flex cursor-pointer flex-col justify-between rounded-2xl border w-[100%] border-slate-200   bg-white p-6 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-400 md:p-7"
+      className=" relative flex cursor-pointer flex-col justify-between rounded-2xl border  w-full lg:w-[60%] md:w-[60%] sm:w-full border-slate-200   bg-white p-6 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-400 md:p-7 "
       aria-label={`${title} — select to view more`}
     >
       <div className="mb-2 flex items-center gap-3">
@@ -178,7 +178,7 @@ export default function DeviceLabServiceSelector({
   return (
     <section
       aria-label="DeviceLab service selector"
-      className={`w-full bg-white ${className}`}
+      className={`w-full bg-white ${className} `}
     >
       <motion.div
         initial="hidden"
@@ -189,7 +189,7 @@ export default function DeviceLabServiceSelector({
       >
         <motion.h2
           variants={item}
-          className="mb-2 text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"
+          className=" mb-2 text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"
         >
           {heading}
         </motion.h2>
@@ -202,7 +202,7 @@ export default function DeviceLabServiceSelector({
 
         <motion.div
           variants={container}
-          className=" flex flex-col justify-around items-center sm:flex-col  md:flex-col   lg:flex-row gap-6 md:w-1/2 lg:w-full"
+          className="w-full flex flex-col justify-around items-center sm:flex-col  md:flex-col   lg:flex-row gap-6  lg:w-full"
         >
           {items.map((d) => (
             <ServiceCard
