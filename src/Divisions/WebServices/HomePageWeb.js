@@ -7,6 +7,8 @@ import WebLiveTemplates from "./components/WebLiveTemplates";
 import WebContact from "./components/WebContact";
 import WebFooter from "./components/WebFooter";
 import { useRef } from "react";
+import SubscribtionExplain from "./components/SubscribtionExplain";
+import FAQ from "./components/FAQ";
 const HomePageWeb = () => {
   const contactRef = useRef(null);
 
@@ -33,12 +35,26 @@ const HomePageWeb = () => {
       <div ref={homeRef}>
         <WebHero />
       </div>
-      <WhyChooseDLW />
+      <div>
+        <WhyChooseDLW />
+      </div>
       <div ref={portfolioRef}>
         <WebLiveTemplates />
       </div>
+      <div>
+        <SubscribtionExplain
+          scrollToContact={() => {
+            contactRef.current.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
+      </div>
+
       <div ref={plansRef}>
         <WebTeirs />
+      </div>
+
+      <div>
+        <FAQ />
       </div>
       <div ref={contactRef}>
         <WebContact />
