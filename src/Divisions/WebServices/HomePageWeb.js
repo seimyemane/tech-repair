@@ -38,9 +38,9 @@ const HomePageWeb = () => {
       <div>
         <WhyChooseDLW />
       </div>
-      <div ref={portfolioRef}>
+      {/* <div ref={portfolioRef}>
         <WebLiveTemplates />
-      </div>
+      </div> */}
       <div>
         <SubscribtionExplain
           scrollToContact={() => {

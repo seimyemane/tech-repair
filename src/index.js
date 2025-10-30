@@ -11,6 +11,7 @@ import StartWebProject from "./Divisions/WebServices/components/StartWebProject"
 import RepHomePage from "./Divisions/Repairly/RepHomePage";
 // IT & Networking
 import IT_Hompage from "./Divisions/IT/IT_Hompage";
+import WebPayments from "./Divisions/WebServices/components/WebPayments";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -22,6 +23,7 @@ root.render(
       {/* WEB SERVICES */}
       <Route path="/division/web" element={<HomePageWeb />} />
       <Route path="/division/web/start" element={<StartWebProject />} />
+      <Route path="/division/web/payments" element={<WebPayments />} />
       {/* REPAIRLY */}
       <Route path="/division/repairS" element={<RepHomePage />} />
       {/* IT & Networking */}
