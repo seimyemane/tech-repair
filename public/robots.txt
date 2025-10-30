@@ -1,0 +1,17 @@
+# DeviceLab Robots.txt
+# ---------------------
+# This file controls how search engines crawl your website.
+
+User-agent: *
+# ✅ Allow all public pages
+Allow: /
+
+# 🚫 Disallow private or non-public paths (if any exist)
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /test/
+Disallow: /temp/
+Disallow: /api/
+
+# 📍 Specify your sitemap location
+Sitemap: https://www.thedevicelab.ca/sitemap.xml
